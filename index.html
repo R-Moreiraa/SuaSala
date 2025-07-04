@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gerador de Propostas - Links Firebase</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* Seu CSS existente aqui */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: white;
+      color: #333;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      padding: 35px;
+    }
+    
+    header {
+      text-align: center;
+      padding: 25px 0;
+      background: #000;
+      color: white;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: white;
+    }
+    
+    h2 {
+      color: #1a2a6c;
+      border-bottom: 2px solid #b21f1f;
+      padding-bottom: 12px;
+      margin: 25px 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    h2 i {
+      font-size: 1.8rem;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      padding: 30px;
+      margin-bottom: 35px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid #eee;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .form-group {
+      margin-bottom: 22px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #000;
+      font-size: 1.05rem;
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      border-color: #1a2a6c;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.2);
+    }
+    
+    .btn {
+      background: #000;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: lighter;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 15px rgba(0, 0, 0, 0.3);
+      background: #000;
+    }
+    
+    .btn i {
+      margin-right: 10px;
+    }
+    
+    .proposal-list {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 25px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
+    
+    .proposal-list th {
+      background: #000;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .proposal-list td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      height: 10px;
+    }
+    
+    .proposal-list tr:nth-child(even) {
+      background-color: #f9f9f9;
+      font-weight: lighter;
+    }
+    
+    .proposal-list tr:hover {
+      background-color: #f0f5ff;
+    }
+    
+    .status-badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: lighter;
+      text-align: center;
+      display: inline-block;
+      min-width: 180px;
+    }
+    
+    .status-elaboracao {
+      background-color: #ffeb3b;
+      color: #000;
+      font-weight: lighter;
+    }
+    
+    .status-aprovacao {
+      background-color: #f1a10e;
+      color: #000;
+      font-weight: lighter;
+    }
+    
+    .status-aprovado {
+      background-color: #4caf50;
+      color: #000;
+      font-weight: lighter;
+    }
+    
+    .status-cancelado {
+      background-color: #f44336;
+      color: #000;
+      font-weight: lighter;
+    }
+    
+    .action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.3rem;
+      margin: 0 6px;
+      transition: all 0.3s ease;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: lighter;
+    }
+    
+    .edit-btn {
+      color: #000;
+      background: rgba(26, 42, 108, 0.1);
+    }
+    
+    .delete-btn {
+      color: #b21f1f;
+      background: rgba(178, 31, 31, 0.1);
+    }
+    
+    .action-btn:hover {
+      transform: scale(1.15);
+      background: white;
+    }
+    
+    .markdown-container {
+      background-color: #000;
+      color: white;
+      border-radius: 10px;
+      padding: 30px;
+      margin-top: 25px;
+      border: 1px solid #dee2e6;
+      font-family: 'Courier New', monospace;
+      white-space: pre-wrap;
+      max-height: 350px;
+      overflow-y: auto;
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+      font-weight: lighter;
+      display: flex;
+    }
+    
+    .download-btn {
+      margin-top: 25px;
+      background: #000;
+      width: 100%;
+      font-weight: lighter;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #1a2a6c;
+      margin-top: 30px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-weight: lighter;
+    }
+    
+    .notification {
+      position: fixed;
+      top: 25px;
+      right: 25px;
+      padding: 18px 30px;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transform: translateX(200%);
+      transition: transform 0.4s ease;
+      z-index: 1000;
+      font-size: 1.1rem;
+      max-width: 400px;
+      font-weight: lighter;
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+    
+    .notification.success {
+      background: #000;
+    }
+    
+    .notification.error {
+      background: #000;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      padding: 15px 20px;
+      background: #f0f5ff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      font-weight: lighter;
+      color: black;
+    }
+    
+    .user-email {
+      font-weight: bold;
+      color: #1a2a6c;
+      font-size: 1.1rem;
+    }
+    
+    .logout-btn {
+      background: #000;
+      padding: 10px 20px;
+      font-weight: lighter;
+    }
+    
+    .login-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+    
+    .login-card {
+      background: white;
+      border-radius: 15px;
+      padding: 40px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    }
+    
+    .login-title {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #1a2a6c;
+    }
+    
+    .login-title i {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      display: block;
+      color: #1a2a6c;
+    }
+    
+    .auth-toggle {
+      text-align: center;
+      margin-top: 25px;
+      color: #666;
+    }
+    
+    .auth-toggle a {
+      color: #1a2a6c;
+      text-decoration: none;
+      font-weight: bold;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+    
+    .auth-toggle a:hover {
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .proposal-list {
+        font-size: 0.95rem;
+      }
+      
+      .proposal-list th, .proposal-list td {
+        padding: 12px;
+      }
+      
+      .user-info {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+      }
+      
+      .login-card {
+        padding: 10px 20px;
+      }
+    }
+
+    .filter-container {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      align-items: center;
+    }
+    
+    .filter-container label {
+      margin-bottom: 0;
+      white-space: nowrap;
+      font-weight: bold;
+      color: #1a2a6c;
+      font-size: 1.1rem;
+    }
+    
+    .filter-container select {
+      flex: 1;
+      padding: 12px;
+    }
+    
+    .filter-btn {
+      background: #000;
+      padding: 12px 20px;
+    }
+    
+    .client-card {
+      background: #f0f5ff;
+      padding: 18px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    .client-name {
+      font-weight: bold;
+      color: #1a2a6c;
+      font-size: 1.1rem;
+    }
+    
+    .client-form {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .client-form input {
+      flex: 1;
+    }
+    
+    .client-form button {
+      flex-shrink: 0;
+    }
+    
+    /* Modal para links de tabela */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      overflow: auto;
+    }
+    
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+    }
+    
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      position: absolute;
+      top: 10px;
+      right: 15px;
+    }
+    
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    
+    .iframe-link {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background: #f9f9f9;
+      cursor: pointer;
+    }
+    
+    .iframe-container {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f0f5ff;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+    
+    .iframe-container textarea {
+      height: 100px;
+      margin-bottom: 10px;
+    }
+    
+    .iframe-preview {
+      margin-top: 15px;
+      padding: 15px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      text-align: center;
+    }
+    
+    .iframe-preview iframe {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    
+    /* Estilos para visualização de cliente */
+    .client-view {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-top: 20px;
+    }
+    
+    .client-header {
+      text-align: center;
+      padding: 20px;
+      background: #000;
+      color: white;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .client-title {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    
+    .client-subtitle {
+      font-size: 1.2rem;
+    }
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <!-- Visualização de cliente (aparece apenas quando tem clientId na URL) -->
+  <div id="client-view" class="client-view hidden">
+    <div class="client-header">
+      <h1 class="client-title"><i class="fas fa-table"></i> Propostas do Cliente</h1>
+      <p class="client-subtitle">Visualização simplificada para compartilhamento</p>
+    </div>
+    
+    <table class="proposal-list">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Status</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody id="client-proposals-list"></tbody>
+    </table>
+  </div>
+
+  <!-- Aplicação principal (aparece apenas quando não tem clientId) -->
+  <div id="app-container" class="container">
+    <header>
+      <h1><i class="fas fa-file-contract"></i> Gerador de Propostas</h1>
+      <p>Gerencie suas propostas e gere relatórios em Markdown</p>
+    </header>
+
+    <!-- Tela de login -->
+    <div id="login-section">
+      <div class="login-container">
+        <div class="login-card">
+          <div class="login-title">
+            <h2> <span style="color:black" >Acesso ao Sistema </span> </h2>
+          </div>
+
+          <div id="login-form">
+            <div class="form-group">
+              <label for="login-email" <span style="color:black" >Email</span> </label>
+              <input type="email" id="login-email" placeholder="seu@email.com" />
+            </div>
+
+            <div class="form-group">
+              <label for="login-password" <span style="color:black" >Senha</span> </label>
+              <input type="password" id="login-password" placeholder="Sua senha" />
+            </div>
+
+            <button id="login-btn" class="btn">
+              <i class="fas fa-sign-in-alt"></i> Entrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conteúdo do app que só aparece quando usuário está logado -->
+    <div id="app-section" class="hidden">
+      <div class="user-info">
+        <div>
+          <span class="user-email" id="user-email"></span>
+        </div>
+        <button id="logout-btn" class="btn logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Sair
+        </button>
+      </div>
+
+      <!-- Área de Propostas -->
+      <div class="card">
+        <h2><span style="color:black"><span style="color:black"</i> Adicionar Nova Proposta</span></h2>
+        
+        <!-- Formulário de cliente integrado -->
+        <div class="client-form">
+          <input type="text" id="client-name" placeholder="Nome do cliente" />
+          <button id="add-client-btn" class="btn">
+           <i class="fas fa-user-plus"></i> Cadastrar Cliente
+          </button>
+        </div>
+        
+        <div class="form-group">
+          <label for="clients-select"<span style="color:black">Selecione o Cliente</span></label>
+          <select id="clients-select">
+            <option value="">Selecione um cliente</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="proposal-title"<span style="color:black">Título da Proposta</span></label>
+          <input type="text" id="proposal-title" placeholder="Digite o título da proposta" />
+        </div>
+        <div class="form-group">
+          <label for="proposal-link"<span style="color:black">Link da Proposta</span></label>
+          <input type="text" id="proposal-link" placeholder="https://exemplo.com/proposta" />
+        </div>
+        <div class="form-group">
+          <label for="proposal-status"<span style="color:black">Status da Proposta</span></label>
+          <select id="proposal-status">
+            <option value="elaboracao">🟡 Em elaboração</option>
+            <option value="aprovacao">🟠 Em aprovação do cliente</option>
+            <option value="aprovado">🟢 Aprovado</option>
+            <option value="cancelado">🔴 Cancelado</option>
+          </select>
+        </div>
+        
+        <button id="add-proposal" class="btn">
+          <i class="fas fa-save"></i> Salvar Proposta
+        </button>
+      </div>
+
+      <div class="card">
+        <h2><span style="color:black"> Lista de Propostas</span></h2>
+        
+        <!-- Filtro por cliente -->
+        <div class="filter-container">
+          <label for="proposal-filter"<span style="color:black">Filtrar por Cliente:</span></label>
+          <select id="proposal-filter">
+            <option value="all">Todos os Clientes</option>
+          </select>
+          <button id="generate-link-btn" class="btn filter-btn">
+            <i class="fas fa-link"></i> Gerar Link
+          </button>
+        </div>
+        
+        <table class="proposal-list">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Status</th>
+              <th>Cliente</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="proposals-list"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2><i class='fab fa-markdown' style="color:black"></i><span style="color:black"</i> Tabela Markdown Gerada</span></h2>
+        <h5>Esta tabela será atualizada automaticamente conforme as propostas são adicionadas ou editadas.</h5>
+        <div class="markdown-container" id="markdown-output"></div>
+        <button id="download-md" class="btn download-btn">
+          <i class="fas fa-download"></i> Baixar Markdown
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal para links de tabela -->
+    <div id="link-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2><i class="fas fa-link"></i> Link de Tabela para Cliente</h2>
+        <p>Use este link para compartilhar a tabela de propostas deste cliente:</p>
+        
+        <div class="form-group">
+          <label><span style="color:black">Link para Visualização</span></label>
+          <input type="text" id="iframe-link" class="iframe-link" readonly onclick="this.select()" />
+        </div>
+        
+        <div class="iframe-container">
+          <h3><i class="fas fa-code"></i> Código para Incorporação (iframe)</h3>
+          <p>Copie e cole este código em qualquer página HTML:</p>
+          <textarea id="iframe-code" readonly></textarea>
+          <button id="copy-code-btn" class="btn">
+            <i class="fas fa-copy"></i> Copiar Código
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+  </div>
+
+  <script>
+    // Configuração Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAhue_2qisBA2Ihe6WPKfonf0NSE4WZnPg", // Sua chave API do Firebase
+      authDomain: "gera-propostas.firebaseapp.com",
+      projectId: "gera-propostas",
+      storageBucket: "gera-propostas.appspot.com",
+      messagingSenderId: "517918747792",
+      appId: "1:517918747792:web:568b86b22e0e5709823c15",
+      measurementId: "G-CJCK09C7D8"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    // Configuração de persistência de sessão
+    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
+      .catch((error) => {
+        console.error("Erro ao configurar persistência:", error);
+      });
+
+    // Elementos do DOM
+    const appContainer = document.getElementById('app-container');
+    const clientView = document.getElementById('client-view');
+    const loginSection = document.getElementById('login-section');
+    const appSection = document.getElementById('app-section');
+    const userEmailSpan = document.getElementById('user-email');
+    const notification = document.getElementById('notification');
+
+    // Elementos de login
+    const loginEmailInput = document.getElementById('login-email');
+    const loginPasswordInput = document.getElementById('login-password');
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // Elementos Clientes
+    const clientNameInput = document.getElementById('client-name');
+    const addClientBtn = document.getElementById('add-client-btn');
+    const clientsSelect = document.getElementById('clients-select');
+
+    // Elementos Propostas
+    const proposalTitleInput = document.getElementById('proposal-title');
+    const proposalLinkInput = document.getElementById('proposal-link');
+    const proposalStatusSelect = document.getElementById('proposal-status');
+    const addProposalBtn = document.getElementById('add-proposal');
+    const proposalsList = document.getElementById('proposals-list');
+    const markdownOutput = document.getElementById('markdown-output');
+
+    // Elementos de Filtro
+    const proposalFilter = document.getElementById('proposal-filter');
+    const generateLinkBtn = document.getElementById('generate-link-btn');
+
+    // Modal
+    const linkModal = document.getElementById('link-modal');
+    const closeModal = document.querySelector('.close');
+    const iframeLink = document.getElementById('iframe-link');
+    const iframeCode = document.getElementById('iframe-code');
+    const copyCodeBtn = document.getElementById('copy-code-btn');
+
+    // Elementos da visualização de cliente
+    const clientProposalsList = document.getElementById('client-proposals-list');
+
+    // Variáveis
+    let clients = [];
+    let proposals = [];
+    let currentFilter = "all";
+    let currentProposalId = null;
+    let currentClientForLink = null;
+
+    function showNotification(message, isSuccess = true) {
+      notification.textContent = message;
+      notification.className = 'notification ' + (isSuccess ? 'success' : 'error') + ' show';
+      setTimeout(() => notification.classList.remove('show'), 4000);
+    }
+
+    // Função para definir estado de loading
+    function setLoading(button, isLoading, defaultText) {
+      button.disabled = isLoading;
+      button.innerHTML = isLoading 
+        ? '<i class="fas fa-spinner fa-spin"></i> Processando...' 
+        : defaultText;
+    }
+
+    // Verificar se estamos no modo de visualização de cliente
+    const urlParams = new URLSearchParams(window.location.search);
+    const clientIdParam = urlParams.get('clientId');
+    
+    if (clientIdParam) {
+      // Modo de visualização de cliente
+      appContainer.style.display = 'none';
+      clientView.classList.remove('hidden');
+      
+      // Carregar propostas do cliente
+      loadClientProposals(clientIdParam);
+    } else {
+      // Modo normal da aplicação
+      clientView.classList.add('hidden');
+      appContainer.style.display = 'block';
+    }
+
+    // Login com email/senha
+    loginBtn.addEventListener('click', () => {
+      const email = loginEmailInput.value.trim();
+      const password = loginPasswordInput.value.trim();
+
+      // Validação de email
+      const emailRegex = /^[^
+\s@]+@[^
+\s@]+\.[^
+\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showNotification('Formato de e-mail inválido!', false);
+        return;
+      }
+
+      if (!email || !password) {
+        showNotification('Por favor, preencha todos os campos!', false);
+        return;
+      }
+
+      const loginBtnText = loginBtn.innerHTML;
+      setLoading(loginBtn, true, loginBtnText);
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          showNotification(`Bem-vindo, ${user.email}!`);
+          userEmailSpan.textContent = user.email;
+          loginSection.classList.add('hidden');
+          appSection.classList.remove('hidden');
+          loadClients();
+          loadProposals();
+        })
+        .catch((error) => {
+          console.error(error);
+          let errorMessage = "Erro ao fazer login!";
+          if (error.code === 'auth/user-not-found') {
+            errorMessage = "Usuário não encontrado!";
+          } else if (error.code === 'auth/wrong-password') {
+            errorMessage = "Senha incorreta!";
+          }
+          showNotification(errorMessage, false);
+        })
+        .finally(() => {
+          setLoading(loginBtn, false, '<i class="fas fa-sign-in-alt"></i> Entrar');
+        });
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      const logoutBtnText = logoutBtn.innerHTML;
+      setLoading(logoutBtn, true, logoutBtnText);
+      
+      auth.signOut().then(() => {
+        showNotification('Desconectado com sucesso.');
+        loginSection.classList.remove('hidden');
+        appSection.classList.add('hidden');
+        // Limpar dados locais
+        clients = [];
+        proposals = [];
+        clientsSelect.innerHTML = '<option value="">Selecione um cliente</option>';
+        proposalFilter.innerHTML = '<option value="all">Todos os Clientes</option>';
+        proposalsList.innerHTML = '';
+        markdownOutput.textContent = '';
+        currentProposalId = null;
+        currentClientForLink = null;
+        
+        // Limpar campos de login
+        loginEmailInput.value = '';
+        loginPasswordInput.value = '';
+      }).catch(error => {
+        showNotification('Erro ao desconectar: ' + error.message, false);
+      }).finally(() => {
+        setLoading(logoutBtn, false, logoutBtnText);
+      });
+    });
+
+    // Monitorar estado de autenticação
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        if (!clientIdParam) { // Só mostra a aplicação principal se não estiver no modo de visualização de cliente
+          userEmailSpan.textContent = user.email;
+          loginSection.classList.add('hidden');
+          appSection.classList.remove('hidden');
+          loadClients();
+          loadProposals();
+        }
+      } else {
+        if (!clientIdParam) { // Só mostra a tela de login se não estiver no modo de visualização de cliente
+          loginSection.classList.remove('hidden');
+          appSection.classList.add('hidden');
+        }
+      }
+    });
+
+    // Adicionar Cliente
+    addClientBtn.addEventListener('click', () => {
+      const clientName = clientNameInput.value.trim();
+      if (!clientName) {
+        showNotification('Por favor, digite o nome do cliente!', false);
+        return;
+      }
+
+      const addClientBtnText = addClientBtn.innerHTML;
+      setLoading(addClientBtn, true, addClientBtnText);
+
+      db.collection('clientes').add({
+        name: clientName,
+        userId: auth.currentUser.uid, // Associa o cliente ao usuário logado
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+        showNotification('Cliente adicionado com sucesso!');
+        clientNameInput.value = '';
+        loadClients(); // Recarrega a lista de clientes
+      })
+      .catch(error => {
+        console.error('Erro ao adicionar cliente:', error);
+        showNotification('Erro ao adicionar cliente: ' + error.message, false);
+      })
+      .finally(() => {
+        setLoading(addClientBtn, false, '<i class="fas fa-user-plus"></i> Cadastrar Cliente');
+      });
+    });
+
+    // Carregar Clientes
+    function loadClients() {
+      db.collection('clientes')
+        .where('userId', '==', auth.currentUser.uid) // Filtra clientes pelo usuário logado
+        .orderBy('name')
+        .onSnapshot(snapshot => {
+          clients = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          populateClientSelects();
+        }, error => {
+          console.error('Erro ao carregar clientes:', error);
+          showNotification('Erro ao carregar clientes: ' + error.message, false);
+        });
+    }
+
+    function populateClientSelects() {
+      clientsSelect.innerHTML = '<option value="">Selecione um cliente</option>';
+      proposalFilter.innerHTML = '<option value="all">Todos os Clientes</option>';
+
+      clients.forEach(client => {
+        const option = document.createElement('option');
+        option.value = client.id;
+        option.textContent = client.name;
+        clientsSelect.appendChild(option);
+
+        const filterOption = option.cloneNode(true);
+        proposalFilter.appendChild(filterOption);
+      });
+
+      // Manter o filtro selecionado após a atualização
+      proposalFilter.value = currentFilter;
+    }
+
+    // Adicionar/Atualizar Proposta
+    addProposalBtn.addEventListener('click', () => {
+      const clientId = clientsSelect.value;
+      const clientName = clientsSelect.options[clientsSelect.selectedIndex].textContent;
+      const title = proposalTitleInput.value.trim();
+      const link = proposalLinkInput.value.trim();
+      const status = proposalStatusSelect.value;
+
+      if (!clientId || !title || !link || !status) {
+        showNotification('Por favor, preencha todos os campos da proposta!', false);
+        return;
+      }
+
+      const addProposalBtnText = addProposalBtn.innerHTML;
+      setLoading(addProposalBtn, true, addProposalBtnText);
+
+      const proposalData = {
+        clientId: clientId,
+        clientName: clientName,
+        title: title,
+        link: link,
+        status: status,
+        userId: auth.currentUser.uid, // Associa a proposta ao usuário logado
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      if (currentProposalId) {
+        // Atualizar proposta existente
+        db.collection('propostas').doc(currentProposalId).update(proposalData)
+          .then(() => {
+            showNotification('Proposta atualizada com sucesso!');
+            resetForm();
+          })
+          .catch(error => {
+            console.error('Erro ao atualizar proposta:', error);
+            showNotification('Erro ao atualizar proposta: ' + error.message, false);
+          })
+          .finally(() => {
+            setLoading(addProposalBtn, false, '<i class="fas fa-save"></i> Salvar Proposta');
+          });
+      } else {
+        // Adicionar nova proposta
+        db.collection('propostas').add(proposalData)
+          .then(() => {
+            showNotification('Proposta adicionada com sucesso!');
+            resetForm();
+          })
+          .catch(error => {
+            console.error('Erro ao adicionar proposta:', error);
+            showNotification('Erro ao adicionar proposta: ' + error.message, false);
+          })
+          .finally(() => {
+            setLoading(addProposalBtn, false, '<i class="fas fa-save"></i> Salvar Proposta');
+          });
+      }
+    });
+
+    function resetForm() {
+      clientsSelect.value = '';
+      proposalTitleInput.value = '';
+      proposalLinkInput.value = '';
+      proposalStatusSelect.value = 'elaboracao';
+      currentProposalId = null;
+      addProposalBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Proposta';
+    }
+
+    // Carregar Propostas
+    function loadProposals() {
+      let query = db.collection('propostas')
+        .where('userId', '==', auth.currentUser.uid) // Filtra propostas pelo usuário logado
+        .orderBy('createdAt', 'desc');
+
+      if (currentFilter !== 'all') {
+        query = query.where('clientId', '==', currentFilter);
+      }
+
+      query.onSnapshot(snapshot => {
+        proposals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderProposals();
+        generateMarkdownTable();
+      }, error => {
+        console.error('Erro ao carregar propostas:', error);
+        showNotification('Erro ao carregar propostas: ' + error.message, false);
+      });
+    }
+
+    function renderProposals() {
+      proposalsList.innerHTML = '';
+      if (proposals.length === 0) {
+        proposalsList.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:30px;">Nenhuma proposta encontrada.</td></tr>`;
+        return;
+      }
+
+      proposals.forEach(proposal => {
+        let statusClass = '', statusText = '';
+
+        switch(proposal.status) {
+          case 'elaboracao': statusClass = 'status-elaboracao'; statusText = '🟡 Em Elaboração'; break;
+          case 'aprovacao': statusClass = 'status-aprovacao'; statusText = '🟠 Em Aprovação do Cliente'; break;
+          case 'aprovado': statusClass = 'status-aprovado'; statusText = '🟢 Aprovado'; break;
+          case 'cancelado': statusClass = 'status-cancelado'; statusText = '🔴 Cancelado'; break;
+        }
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${proposal.title}</td>
+          <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+          <td>${proposal.clientName}</td>
+          <td>
+            <button class="action-btn edit-btn" data-id="${proposal.id}">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="action-btn delete-btn" data-id="${proposal.id}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
+        proposalsList.appendChild(row);
+      });
+
+      // Adicionar listeners para botões de editar e deletar
+      document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', (e) => editProposal(e.currentTarget.dataset.id));
+      });
+      document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', (e) => deleteProposal(e.currentTarget.dataset.id));
+      });
+    }
+
+    function editProposal(id) {
+      const proposalToEdit = proposals.find(p => p.id === id);
+      if (proposalToEdit) {
+        clientsSelect.value = proposalToEdit.clientId;
+        proposalTitleInput.value = proposalToEdit.title;
+        proposalLinkInput.value = proposalToEdit.link;
+        proposalStatusSelect.value = proposalToEdit.status;
+        currentProposalId = id;
+        addProposalBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Atualizar Proposta';
+      }
+    }
+
+    function deleteProposal(id) {
+      if (confirm('Tem certeza que deseja deletar esta proposta?')) {
+        db.collection('propostas').doc(id).delete()
+          .then(() => {
+            showNotification('Proposta deletada com sucesso!');
+          })
+          .catch(error => {
+            console.error('Erro ao deletar proposta:', error);
+            showNotification('Erro ao deletar proposta: ' + error.message, false);
+          });
+      }
+    }
+
+    // Filtrar propostas
+    proposalFilter.addEventListener('change', (e) => {
+      currentFilter = e.target.value;
+      loadProposals();
+    });
+
+    // Gerar Tabela Markdown
+    function generateMarkdownTable() {
+      let markdown = `| Título | Status | Cliente | Link |
+|---|---|---|---|
+`;
+
+      if (proposals.length === 0) {
+        markdownOutput.textContent = markdown + `| Nenhuma proposta encontrada. | | | |`;
+        return;
+      }
+
+      proposals.forEach(proposal => {
+        let statusText = '';
+        switch(proposal.status) {
+          case 'elaboracao': statusText = 'Em Elaboração'; break;
+          case 'aprovacao': statusText = 'Em Aprovação'; break;
+          case 'aprovado': statusText = 'Aprovado'; break;
+          case 'cancelado': statusText = 'Cancelado'; break;
+        }
+        markdown += `| ${proposal.title} | ${statusText} | ${proposal.clientName} | [Acessar](${proposal.link}) |
+`;
+      });
+      markdownOutput.textContent = markdown;
+    }
+
+    // Baixar Markdown
+    document.getElementById('download-md').addEventListener('click', () => {
+      const markdownContent = markdownOutput.textContent;
+      const blob = new Blob([markdownContent], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'propostas.md';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+
+    // Modal de Link
+    generateLinkBtn.addEventListener('click', () => {
+      const selectedClientId = proposalFilter.value;
+      if (selectedClientId === 'all' || !selectedClientId) {
+        showNotification('Por favor, selecione um cliente para gerar o link.', false);
+        return;
+      }
+
+      currentClientForLink = clients.find(c => c.id === selectedClientId);
+      if (!currentClientForLink) {
+        showNotification('Cliente não encontrado.', false);
+        return;
+      }
+
+      const baseUrl = window.location.href.split('?')[0];
+      const link = `${baseUrl}?clientId=${currentClientForLink.id}`;
+      iframeLink.value = link;
+      iframeCode.value = `<iframe src="${link}" width="100%" height="500px" frameborder="0"></iframe>`;
+      linkModal.style.display = 'block';
+    });
+
+    closeModal.addEventListener('click', () => {
+      linkModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+      if (event.target == linkModal) {
+        linkModal.style.display = 'none';
+      }
+    });
+
+    copyCodeBtn.addEventListener('click', () => {
+      iframeCode.select();
+      document.execCommand('copy');
+      showNotification('Código copiado para a área de transferência!');
+    });
+
+    // Função para carregar propostas para a visualização do cliente (com autenticação anônima)
+    function loadClientProposals(clientId) {
+      // 1. Tentar autenticar anonimamente
+      auth.signInAnonymously()
+        .then(() => {
+          // 2. Após autenticação anônima bem-sucedida, carregar propostas
+          // O usuário anônimo agora está autenticado.
+          // Suas regras de segurança do Firestore precisarão permitir que este usuário anônimo
+          // leia as propostas associadas ao 'clientId' fornecido.
+          db.collection('propostas').where('clientId', '==', clientId)
+            .orderBy('createdAt', 'desc')
+            .get()
+            .then(snapshot => {
+              clientProposalsList.innerHTML = '';
+
+              if (snapshot.empty) {
+                clientProposalsList.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:30px;">Nenhuma proposta encontrada para este cliente.</td></tr>`;
+                return;
+              }
+
+              snapshot.forEach(doc => {
+                const proposal = doc.data();
+                let statusClass = '', statusText = '';
+
+                switch(proposal.status) {
+                  case 'elaboracao': statusClass = 'status-elaboracao'; statusText = '🟡 Em Elaboração'; break;
+                  case 'aprovacao': statusClass = 'status-aprovacao'; statusText = '🟠 Em Aprovação do Cliente'; break;
+                  case 'aprovado': statusClass = 'status-aprovado'; statusText = '🟢 Aprovado'; break;
+                  case 'cancelado': statusClass = 'status-cancelado'; statusText = '🔴 Cancelado'; break;
+                }
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                  <td>${proposal.title}</td>
+                  <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                  <td><a href="${proposal.link || '#'}" target="_blank" style="color: #1a2a6c; text-decoration: none; font-weight: bold;">
+                    <i class="fas fa-external-link-alt"></i> Acessar
+                  </a></td>
+                `;
+                clientProposalsList.appendChild(row);
+              });
+            })
+            .catch(error => {
+              console.error('Erro ao carregar propostas do cliente:', error);
+              clientProposalsList.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:30px; color: #f44336;">
+                Erro ao carregar propostas. Tente novamente mais tarde.
+              </td></tr>`;
+            });
+        })
+        .catch(error => {
+          console.error("Erro na autenticação anônima:", error);
+          clientProposalsList.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:30px; color: #f44336;">
+            Não foi possível acessar as propostas. Por favor, tente novamente.
+          </td></tr>`;
+        });
+    }
+  </script>
+</body>
+</html>
+
+
